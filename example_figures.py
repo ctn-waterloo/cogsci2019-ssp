@@ -27,6 +27,9 @@ vmin=-1
 vmax=1
 cmap='plasma'
 
+xs = np.linspace(-limit, limit, res)
+ys = np.linspace(-limit, limit, res)
+
 x_axis_sp = make_good_unitary(dim)
 y_axis_sp = make_good_unitary(dim)
 
