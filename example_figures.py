@@ -38,12 +38,12 @@ heatmap_vectors = get_heatmap_vectors(xs, ys, x_axis_sp, y_axis_sp)
 
 def plt_heatmap(vec, heatmap_vectors, name='', vmin=-1, vmax=1, cmap='plasma'):
     # vec has shape (dim) and heatmap_vectors have shape (xs, ys, dim) so the result will be (xs, ys)
-    vs = np.tensordot(vec, heatmap_vectors, axes=([0], [2]))
+    # the output is transposed and flipped so that it is displayed intuitively on the image plot
+    vs = np.flip(np.tensordot(vec, heatmap_vectors, axes=([0], [2])).T, axis=0)
 
     if cmap == 'diverging':
         cmap = sns.diverging_palette(150, 275, s=80, l=55, as_cmap=True)
 
-    # TODO: allow the 'extent' to be changed with a parameter
     plt.imshow(vs, interpolation='none', extent=(xs[0], xs[-1], ys[0], ys[-1]), vmin=vmin, vmax=vmax, cmap=cmap)
     plt.colorbar()
 
@@ -53,12 +53,12 @@ def plt_heatmap(vec, heatmap_vectors, name='', vmin=-1, vmax=1, cmap='plasma'):
 
 def heatmap(vec, heatmap_vectors, ax, name='', vmin=-1, vmax=1, cmap='plasma'):
     # vec has shape (dim) and heatmap_vectors have shape (xs, ys, dim) so the result will be (xs, ys)
-    vs = np.tensordot(vec, heatmap_vectors, axes=([0], [2]))
+    # the output is transposed and flipped so that it is displayed intuitively on the image plot
+    vs = np.flip(np.tensordot(vec, heatmap_vectors, axes=([0], [2])).T, axis=0)
 
     if cmap == 'diverging':
         cmap = sns.diverging_palette(150, 275, s=80, l=55, as_cmap=True)
 
-    # TODO: allow the 'extent' to be changed with a parameter
     img = ax.imshow(vs, interpolation='none', extent=(xs[0], xs[-1], ys[0], ys[-1]), vmin=vmin, vmax=vmax, cmap=cmap)
 
     ax.set_title(name)
@@ -94,7 +94,7 @@ def plt_plot_similarity(vec, xs, ys, x_axis_sp, y_axis_sp, name='', vmin=-1, vma
 if "Single Item" in plot_types:
     fig, ax = plt.subplots(tight_layout=True, figsize=(4, 4))
 
-    coord_sp = encode_point(2, 3, x_axis_sp, y_axis_sp)
+    coord_sp = encode_point(3, -2, x_axis_sp, y_axis_sp)
 
     heatmap(
         coord_sp.v,
@@ -111,8 +111,8 @@ if "Single Item" in plot_types:
 if "Two Items Decoded" in plot_types:
     fig, ax = plt.subplots(tight_layout=True, figsize=(4, 4))
 
-    pos1 = encode_point(2, 3, x_axis_sp, y_axis_sp)
-    pos2 = encode_point(-1.5, -.3, x_axis_sp, y_axis_sp)
+    pos1 = encode_point(3, -2, x_axis_sp, y_axis_sp)
+    pos2 = encode_point(-.3, 1.5, x_axis_sp, y_axis_sp)
     item1 = spa.SemanticPointer(dim)
     item2 = spa.SemanticPointer(dim)
 
@@ -136,14 +136,15 @@ if 'Sliding Objects' in plot_types:
 
     fig, ax = plt.subplots(1, 3, sharey='row', tight_layout=True, figsize=(9, 3))
 
-    pos1 = encode_point(2, 3, x_axis_sp, y_axis_sp)
-    pos2 = encode_point(-1, 4, x_axis_sp, y_axis_sp)
-    pos3 = encode_point(-2, -1, x_axis_sp, y_axis_sp)
+    pos1 = encode_point(3, -2, x_axis_sp, y_axis_sp)
+    pos2 = encode_point(4, 1, x_axis_sp, y_axis_sp)
+    pos3 = encode_point(-1, 2, x_axis_sp, y_axis_sp)
 
     mem = pos1 + pos2 + pos3
     mem.normalize()
 
-    mem_moved = mem * encode_point(-1, -2, x_axis_sp, y_axis_sp)
+    # sliding all objects
+    mem_moved = mem * encode_point(-2, 1, x_axis_sp, y_axis_sp)
 
     title_font_size = 16
 
@@ -165,9 +166,8 @@ if 'Sliding Objects' in plot_types:
     )
     ax[2].set_title("All Items Moved", fontsize=title_font_size)
 
-    # TODO: sliding single object here
-
-    new_pos = pos3 * encode_point(-1, -2, x_axis_sp, y_axis_sp)
+    # sliding single object
+    new_pos = pos3 * encode_point(-2, 1, x_axis_sp, y_axis_sp)
     mem_single_moved = mem - pos3 + new_pos
 
     img = heatmap(
