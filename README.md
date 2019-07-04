@@ -1,5 +1,10 @@
-# cogsci2019-ssp
-Code for the paper "A neural representation of continuous space using fractional binding"
+# A neural representation of continuous space using fractional binding
+
+Code accompanying the paper presented at CogSci 2019 in Montreal
+
+Brent Komer, Terrence C. Stewart, Aaron R. Voelker, and Chris Eliasmith. (2019) [A neural representation of continuous space using fractional binding](http://compneuro.uwaterloo.ca/files/publications/komer.2019.pdf). *Proceedings of the 41st Annual Meeting of the Cognitive Science Society.*
+
+## Reproducing results
 
 Figure 1, 2a, and 3 are created with `example_figures.py`
 
